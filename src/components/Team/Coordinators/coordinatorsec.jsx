@@ -31,7 +31,7 @@ const CoOrdinatorSec = (props) => {
 };
 
 const coordinatorsSecCombined = ()=>{
-	const [overallcoordinatorslist,headcoordinatorslist] = splitarray(coordinatorsList,3)
+	const [overallcoordinatorslist,headcoordinatorslist] = splitarray(coordinatorsList,4)
 	return(
 		<>
 		<CoOrdinatorSec title="Overall Coordinators" list={overallcoordinatorslist} />

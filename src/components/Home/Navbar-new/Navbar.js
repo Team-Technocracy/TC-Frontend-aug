@@ -16,7 +16,7 @@ function Navbar() {
                         <li><Link to="/">HOME</Link></li>
                         <li><Link to="/aavartan">AAVARTAN</Link></li>
                         <li><Link to="/events">EVENTS</Link></li>
-                        <li><a href="/#journey">JOURNEY</a></li>
+                        <li><Link to="/vigyaan">VIGYAAN</Link></li>
                         <li><a href="/#spons">SPONSORS</a></li>
                         <li><a href="/#team">TEAM</a></li>
                         <li><a href="#footer">CONTACT</a></li>

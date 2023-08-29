@@ -40,6 +40,7 @@ import QR_FINDER from "./components/QR_FINDER";
 import ValoForm from "./components/Forms/Registration/ValoForm"
 import Gform from "./components/Forms/Registration/Gform";
 import Vigyaan from "./components/Aavartan_Components/Vigyaan";
+import VigyaanForm from "./components/Forms/Registration/Vigyaan/VigyaanForm";
 
 const App = () => {
   const [isDesktop, setIsDesktop] = useState(false);
@@ -94,6 +95,7 @@ const App = () => {
           />
 
           <Route exact path="/register/animatrix" element={<Animatrix />} />
+          <Route exact path="/register/vigyaan" element={<VigyaanForm />} />
           <Route exact path="/register/circuitrix" element={<Circuitrix />} />
           <Route exact path="/register/robotrek" element={<Robotrek />} />
           <Route exact path="/register/openmic" element={<OpenMic />} />

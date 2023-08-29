@@ -222,20 +222,6 @@ function VigyaanForm() {
 											onKeyUp={(e) => handle(e)}
 										/>
 									</Grid>
-
-									<Grid item xs={12}>
-										<TextField
-											margin="normal"
-											required
-											fullWidth
-											id="team_leader_number"
-											name="leader_number"
-											label="Team Leader Contact no"
-											variant="outlined"
-											autoComplete='off'
-											onKeyUp={(e) => handle(e)}
-										/>
-									</Grid>
 									<Grid item xs={12}>
 										<TextField
 											margin="normal"

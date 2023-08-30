@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React from "react";
 import urls from "../../../../urls.json";
 import { Formik } from "formik";
+import { useState } from "react";
 import styles from "../Styles/styles.module.css";
 import Navbar from "../../../Home/Navbar-new/Navbar";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
@@ -42,9 +43,6 @@ function VigyaanForm() {
   const [alert0, setErrorAlert] = useState(false);
   const [alert1, setAlert] = useState(false);
   const [alertContent0, setErrorAlertContent] = useState("");
-  const [isWhatsAppValid, setIsWhatsAppValid] = useState(false);
-  const [isWhatsAppValidMember2, setIsWhatsAppValidMember2] = useState(false);
-  const [isWhatsAppValidMember3, setIsWhatsAppValidMember3] = useState(false);
   const [alertContent1, setSuccessAlertContent] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
   // const [selectedCategory, setSelectedCategory] = useState("");
@@ -96,36 +94,16 @@ function VigyaanForm() {
     const newData = { ...form };
     newData[e.target.name] = e.target.value;
     set(newData);
-
-    if (e.target.name === "Leader_whatsapp") {
-      const isNumberValid = isWhatsAppNumberValid(e.target.value);
-      setIsWhatsAppValid(isNumberValid);
-    }
-    if (e.target.name === "Member2_whatsapp") {
-      const isNumberValid = isWhatsAppNumberValid(e.target.value);
-      setIsWhatsAppValidMember2(isNumberValid);
-    }
-  
-    if (e.target.name === "Member3_whatsapp") {
-      const isNumberValid = isWhatsAppNumberValid(e.target.value);
-      setIsWhatsAppValidMember3(isNumberValid);
-    }
   }
 
   async function submit() {
     setIsSubmitting(true);
     showLoader();
-
-    const isLeaderWhatsAppValid = isWhatsAppNumberValid(form.Leader_whatsapp);
-    const isMember2WhatsAppValid = isWhatsAppNumberValid(form.Member2_whatsapp);
-    const isMember3WhatsAppValid = isWhatsAppNumberValid(form.Member3_whatsapp);
-
     if (
       form.Team_name !== "" &&
       form.Leader_name !== "" &&
       form.Leader_email !== "" &&
       form.Leader_whatsapp !== "" &&
-      isLeaderWhatsAppValid &&
       form.College !== "" &&
       form.YOG !== "" &&
       form.Leader_branch !== "" &&
@@ -149,9 +127,9 @@ function VigyaanForm() {
               "Content-Type": "multipart/form-data",
             },
           });
-          toast.success(res2.data.message); 
+          toast.success(res2.data.message);
         } else {
-          toast.error(res1.data.message); 
+          toast.error(res1.data.message);
         }
       } catch (err) {
         console.log(err);
@@ -159,7 +137,7 @@ function VigyaanForm() {
       }
     } else {
       setIsSubmitting(false);
-      toast.warning("Fill the required details correctly!!!");
+      toast.warning("Fill the required details!!!");
     }
     setIsSubmitting(false);
   }
@@ -170,10 +148,6 @@ function VigyaanForm() {
   function changeState() {
     setToggle(!toggle);
     setAttri(!attri);
-  }
-
-  function isWhatsAppNumberValid(number) {
-    return /^\d{10}$/.test(number);
   }
 
   return (
@@ -300,9 +274,6 @@ function VigyaanForm() {
                         autoComplete="off"
                         onKeyUp={(e) => handle(e)}
                       />
-                      {form.Leader_whatsapp && !isWhatsAppValid && (
-                        <p style={{ color: "red" }}>WhatsApp number must be of 10 digits.</p>
-                      )}
                     </Grid>
                     <Grid item xs={12}>
                       <TextField
@@ -370,9 +341,20 @@ function VigyaanForm() {
                         autoComplete="none"
                         onKeyUp={(e) => handle(e)}
                       />
-                      {form.Member2_whatsapp && !isWhatsAppValidMember2 && (
-                        <p style={{ color: "red" }}>WhatsApp number must be of 10 digits.</p>
-                      )}
+                    </Grid>
+
+                    <Grid item xs={12}>
+                      <TextField
+                        margin="normal"
+                        required
+                        fullWidth
+                        id="year"
+                        name="YOG"
+                        label="Year of graduation(Team Member 2)"
+                        variant="outlined"
+                        autoComplete="off"
+                        onKeyUp={(e) => handle(e)}
+                      />
                     </Grid>
                     <Grid item xs={12}>
                       <TextField
@@ -399,9 +381,19 @@ function VigyaanForm() {
                         autoComplete="none"
                         onKeyUp={(e) => handle(e)}
                       />
-                      {form.Member3_whatsapp && !isWhatsAppValidMember3 && (
-                        <p style={{ color: "red" }}>WhatsApp number must be of 10 digits.</p>
-                      )}
+                    </Grid>
+
+                    <Grid item xs={12}>
+                      <TextField
+                        margin="normal"
+                        fullWidth
+                        id="year"
+                        name="YOG"
+                        label="Year of graduation(Team Member 3)"
+                        variant="outlined"
+                        autoComplete="off"
+                        onKeyUp={(e) => handle(e)}
+                      />
                     </Grid>
                     <Grid item xs={12}>
                       <TextField
@@ -432,7 +424,7 @@ function VigyaanForm() {
                         </Button>
                       </label>
                       {uploadedFileName && (
-                        <p style={{color:"white", paddingTop:"1rem"}}>Uploaded File: {uploadedFileName}</p>
+                        <p style={{ color: "white", paddingTop: "1rem" }}>Uploaded File: {uploadedFileName}</p>
                       )}
                     </Grid>
                   </Grid>

@@ -126,9 +126,9 @@ function VigyaanForm() {
               "Content-Type": "multipart/form-data",
             },
           });
-          toast.success(res2.data.message); 
+          toast.success(res2.data.message);
         } else {
-          toast.error(res1.data.message); 
+          toast.error(res1.data.message);
         }
       } catch (err) {
         console.log(err);
@@ -341,6 +341,20 @@ function VigyaanForm() {
                         onKeyUp={(e) => handle(e)}
                       />
                     </Grid>
+
+                    <Grid item xs={12}>
+                      <TextField
+                        margin="normal"
+                        required
+                        fullWidth
+                        id="year"
+                        name="YOG"
+                        label="Year of graduation(Team Member 2)"
+                        variant="outlined"
+                        autoComplete="off"
+                        onKeyUp={(e) => handle(e)}
+                      />
+                    </Grid>
                     <Grid item xs={12}>
                       <TextField
                         margin="normal"
@@ -348,7 +362,6 @@ function VigyaanForm() {
                         id="name3"
                         label="Team Member 3 Name"
                         type="text"
-                        required
                         fullWidth
                         variant="outlined"
                         autoComplete="none"
@@ -362,10 +375,22 @@ function VigyaanForm() {
                         id="whatsapp3"
                         label="Team Member 3 Whatsapp No."
                         type="text"
-                        required
                         fullWidth
                         variant="outlined"
                         autoComplete="none"
+                        onKeyUp={(e) => handle(e)}
+                      />
+                    </Grid>
+
+                    <Grid item xs={12}>
+                      <TextField
+                        margin="normal"
+                        fullWidth
+                        id="year"
+                        name="YOG"
+                        label="Year of graduation(Team Member 3)"
+                        variant="outlined"
+                        autoComplete="off"
                         onKeyUp={(e) => handle(e)}
                       />
                     </Grid>
@@ -398,7 +423,7 @@ function VigyaanForm() {
                         </Button>
                       </label>
                       {uploadedFileName && (
-                        <p style={{color:"white", paddingTop:"1rem"}}>Uploaded File: {uploadedFileName}</p>
+                        <p style={{ color: "white", paddingTop: "1rem" }}>Uploaded File: {uploadedFileName}</p>
                       )}
                     </Grid>
                   </Grid>

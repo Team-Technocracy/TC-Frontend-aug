@@ -19,7 +19,8 @@ import axios from "axios";
 import { NavLink } from "react-router-dom";
 import img from "../../../../assets/images/leftArrow.png";
 import useFullPageLoader from "../../../utils/useFullPageLoader";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const darkTheme = createTheme({
   palette: {
     mode: "dark",
@@ -125,19 +126,17 @@ function VigyaanForm() {
               "Content-Type": "multipart/form-data",
             },
           });
-          alert(res2.data.message);
+          toast.success(res2.data.message); 
         } else {
-          alert(res1.data.message);
+          toast.error(res1.data.message); 
         }
       } catch (err) {
         console.log(err);
-        alert("An error occurred");
+        toast.error("An error occurred");
       }
     } else {
-      hideLoader();
-      setErrorAlertContent("Fill the required details!!!");
-      setErrorAlert(true);
-      setAlert(false);
+      setIsSubmitting(false);
+      toast.warning("Fill the required details!!!");
     }
     setIsSubmitting(false);
   }
@@ -432,6 +431,7 @@ function VigyaanForm() {
               </Formik>
             </div>
           </Container>
+          <ToastContainer position="top-right" autoClose={5000} />
         </div>
       </ThemeProvider>
     </>

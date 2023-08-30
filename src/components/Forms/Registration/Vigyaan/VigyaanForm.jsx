@@ -1,19 +1,25 @@
-import React, { useState } from "react";
-import { Formik } from "formik";
-import { Button, Container, Grid, TextField, Alert } from "@mui/material";
-import useFullPageLoader from "../../../utils/useFullPageLoader";
-import axios from "axios";
-import { toast } from "react-toastify";
-// ... (other imports)
-
+import React from "react";
 import urls from "../../../../urls.json";
+import { Formik } from "formik";
+import { useState } from "react";
 import styles from "../Styles/styles.module.css";
 import Navbar from "../../../Home/Navbar-new/Navbar";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-
+import { Button } from "@mui/material";
+import {
+  Container,
+  TextField,
+  Grid,
+  useThemeProps,
+  Alert,
+} from "@mui/material";
+// import { Select, MenuItem, FormControl, InputLabel } from "@mui/material";
 import { useParams } from "react-router-dom";
+import axios from "axios";
 import { NavLink } from "react-router-dom";
 import img from "../../../../assets/images/leftArrow.png";
+import useFullPageLoader from "../../../utils/useFullPageLoader";
+import { toast } from "react-toastify";
 const darkTheme = createTheme({
   palette: {
     mode: "dark",
@@ -37,8 +43,9 @@ function VigyaanForm() {
   const [alert1, setAlert] = useState(false);
   const [alertContent0, setErrorAlertContent] = useState("");
   const [alertContent1, setSuccessAlertContent] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("");
-  const [selectedSubcategory, setSelectedSubcategory] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  // const [selectedCategory, setSelectedCategory] = useState("");
+  // const [selectedSubcategory, setSelectedSubcategory] = useState("");
 
   const [uploadedFileName, setUploadedFileName] = useState("");
   const [uploadedFile, setUploadedFile] = useState(null);
@@ -88,35 +95,51 @@ function VigyaanForm() {
     set(newData);
   }
 
-  async function submit(values, { setSubmitting, resetForm }) {
+  async function submit() {
+    setIsSubmitting(true);
     showLoader();
-    setErrorAlert(false);
-    setAlert(false);
-
-    try {
-      const res1 = await axios.post(`${backend}/vigyaanReg`, values, {
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-      if (res1.data.ok) {
-        const res2 = await axios.post(`${backend}/vigyaanAbstract`, values, {
+    if (
+      form.Team_name !== "" &&
+      form.Leader_name !== "" &&
+      form.Leader_email !== "" &&
+      form.Leader_whatsapp !== "" &&
+      form.College !== "" &&
+      form.YOG !== "" &&
+      form.Leader_branch !== "" &&
+      form.Member3_name !== "" &&
+      form.Member2_name !== "" &&
+      form.Member2_whatsapp !== "" &&
+      form.Member3_whatsapp !== "" &&
+      form.Problem_code !== "" &&
+      form.file
+    ) {
+      try {
+        const res1 = await axios.post(`${backend}/vigyaanReg`, form, {
           headers: {
-            "Content-Type": "multipart/form-data",
+            "Content-Type": "application/json",
           },
         });
-        toast.success("Successfully Submitted");
-        resetForm(); // Reset form values
-      } else {
-        toast.error(res1.data.message);
+        if (res1.data.ok) {
+          const res2 = await axios.post(`${backend}/vigyaanAbstract`, form, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          });
+          alert(res2.data.message);
+        } else {
+          alert(res1.data.message);
+        }
+      } catch (err) {
+        console.log(err);
+        alert("An error occurred");
       }
-    } catch (err) {
-      console.log(err);
-      toast.error("An error occurred");
-    } finally {
+    } else {
       hideLoader();
-      setSubmitting(false);
+      setErrorAlertContent("Fill the required details!!!");
+      setErrorAlert(true);
+      setAlert(false);
     }
+    setIsSubmitting(false);
   }
 
   const [attri, setAttri] = useState(false);
@@ -172,9 +195,6 @@ function VigyaanForm() {
                     <li> 23rd October, 2023</li>
                   </ul>
                 </p>
-                {/* <p className={styles.event_location}><b>LOCATION : </b>Left Garden</p>
-							<p className={styles.event_time}><b>TIME : </b>9:30 AM- 11:30 AM</p>
-							<p className={styles.event_time}><b>DATE : </b>04.02.2023</p> */}
                 <p className={styles.event_time}>
                   <b>CONTACT : </b>Somya Kabra : 6266307431, Sachin Saini :
                   9352152742
@@ -200,7 +220,7 @@ function VigyaanForm() {
                   number_3: "",
                 }}
               >
-                {/* <form className={styles.form}>
+                <form className={styles.form}>
                   <Grid container spacing={2}>
                     <Grid item xs={12}>
                       <TextField
@@ -404,222 +424,11 @@ function VigyaanForm() {
                     type="button"
                     className={styles.registration_button}
                     onClick={submit}
+                    disabled={isSubmitting} // Disable the button during submission
                   >
-                    Register
+                    {isSubmitting ? "Submitting" : "Register"}
                   </button>
-                </form> */}
-                {({
-                  values,
-                  errors,
-                  touched,
-                  handleChange,
-                  handleBlur,
-                  handleSubmit,
-                  isSubmitting,
-                }) => (
-                  <form className={styles.form} onSubmit={handleSubmit}>
-                    <Grid container spacing={2}>
-                      <Grid item xs={12}>
-                        <TextField
-                          margin="normal"
-                          required
-                          fullWidth
-                          id="Team_name"
-                          name="Team_name"
-                          label="Team Name"
-                          variant="outlined"
-                          autoFocus
-                          autoComplete="off"
-                          onKeyUp={(e) => handle(e)}
-                        />
-                      </Grid>
-                      <Grid item xs={12}>
-                        <TextField
-                          margin="normal"
-                          required
-                          fullWidth
-                          id="team_Leader_name"
-                          name="Leader_name"
-                          label="Team Leader's Name"
-                          variant="outlined"
-                          autoComplete="off"
-                          onKeyUp={(e) => handle(e)}
-                        />
-                      </Grid>
-                      <Grid item xs={12}>
-                        <TextField
-                          margin="normal"
-                          required
-                          fullWidth
-                          id="email"
-                          label="Leader's Email Address"
-                          name="Leader_email"
-                          autoComplete="email"
-                          variant="outlined"
-                          onKeyUp={(e) => handle(e)}
-                        />
-                      </Grid>
-                      <Grid item xs={12}>
-                        <TextField
-                          margin="normal"
-                          required
-                          fullWidth
-                          id="whatsapp_no"
-                          name="Leader_whatsapp"
-                          label="Leader's WhatsApp No"
-                          variant="outlined"
-                          autoComplete="off"
-                          onKeyUp={(e) => handle(e)}
-                        />
-                      </Grid>
-                      <Grid item xs={12}>
-                        <TextField
-                          margin="normal"
-                          required
-                          fullWidth
-                          id="college_name"
-                          name="College"
-                          label="College Name"
-                          variant="outlined"
-                          autoComplete="off"
-                          onKeyUp={(e) => handle(e)}
-                        />
-                      </Grid>
-                      <Grid item xs={12}>
-                        <TextField
-                          margin="normal"
-                          required
-                          fullWidth
-                          id="branch"
-                          name="Leader_branch"
-                          label="Leader's Branch"
-                          variant="outlined"
-                          autoComplete="off"
-                          onKeyUp={(e) => handle(e)}
-                        />
-                      </Grid>
-                      <Grid item xs={12}>
-                        <TextField
-                          margin="normal"
-                          required
-                          fullWidth
-                          id="year"
-                          name="YOG"
-                          label="Year of graduation"
-                          variant="outlined"
-                          autoComplete="off"
-                          onKeyUp={(e) => handle(e)}
-                        />
-                      </Grid>
-                      <Grid item xs={12}>
-                        <TextField
-                          margin="normal"
-                          name="Member2_name"
-                          id="name2"
-                          label="Team Member 2 Name"
-                          type="text"
-                          required
-                          fullWidth
-                          variant="outlined"
-                          autoComplete="none"
-                          onKeyUp={(e) => handle(e)}
-                        />
-                      </Grid>
-                      <Grid item xs={12}>
-                        <TextField
-                          margin="normal"
-                          name="Member2_whatsapp"
-                          id="whatsapp3"
-                          label="Team Member 2 Whatsapp No."
-                          type="text"
-                          required
-                          fullWidth
-                          variant="outlined"
-                          autoComplete="none"
-                          onKeyUp={(e) => handle(e)}
-                        />
-                      </Grid>
-                      <Grid item xs={12}>
-                        <TextField
-                          margin="normal"
-                          name="Member3_name"
-                          id="name3"
-                          label="Team Member 3 Name"
-                          type="text"
-                          required
-                          fullWidth
-                          variant="outlined"
-                          autoComplete="none"
-                          onKeyUp={(e) => handle(e)}
-                        />
-                      </Grid>
-                      <Grid item xs={12}>
-                        <TextField
-                          margin="normal"
-                          name="Member3_whatsapp"
-                          id="whatsapp3"
-                          label="Team Member 3 Whatsapp No."
-                          type="text"
-                          required
-                          fullWidth
-                          variant="outlined"
-                          autoComplete="none"
-                          onKeyUp={(e) => handle(e)}
-                        />
-                      </Grid>
-                      <Grid item xs={12}>
-                        <TextField
-                          margin="normal"
-                          type="text"
-                          required
-                          fullWidth
-                          variant="outlined"
-                          autoComplete="none"
-                          labelId="category-label"
-                          id="category"
-                          name="Problem_code"
-                          label="Problem Code"
-                          onKeyUp={(e) => handle(e)}
-                        />
-                      </Grid>
-                      <Grid item xs={12}>
-                        <input
-                          accept="application/pdf"
-                          style={{ display: "none" }}
-                          id="file-input"
-                          type="file"
-                          onChange={handleFileChange}
-                        />
-                        <label htmlFor="file-input">
-                          <Button variant="outlined" component="span">
-                            Upload Your Abstract
-                          </Button>
-                        </label>
-                        {uploadedFileName && (
-                          <p>Uploaded File: {uploadedFileName}</p>
-                        )}
-                      </Grid>
-                    </Grid>
-                    <br></br>
-                    {alert0 && (
-                      <Alert variant="outlined" severity="error">
-                        {alertContent0}
-                      </Alert>
-                    )}
-                    {alert1 && (
-                      <Alert variant="outlined" severity="success">
-                        {alertContent1}
-                      </Alert>
-                    )}
-                    <button
-                      type="submit"
-                      className={styles.registration_button}
-                      disabled={isSubmitting}
-                    >
-                      {isSubmitting ? "Submitting..." : "Register"}
-                    </button>
-                  </form>
-                )}
+                </form>
               </Formik>
             </div>
           </Container>

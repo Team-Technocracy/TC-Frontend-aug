@@ -132,7 +132,7 @@ function VigyaanForm() {
         }
       } catch (err) {
         console.log(err);
-        toast.error("An error occurred");
+        toast.error(err.reponse.data.message);
       }
     } else {
       setIsSubmitting(false);

@@ -40,12 +40,17 @@ const Admin = () => {
         alert("File size limit: 1 MB")
       }
       else {
-        const response = await axios.post(`${backend}/changeFile`, form, {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        })
-        alert(response.data.message)
+        try {
+          const response = await axios.post(`${backend}/changeFile`, form, {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
+          })
+          alert(response.data.message)
+        }
+        catch (err) {
+          alert(err.response.data.message)
+        }
       }
     }
     setClick(false)
@@ -91,6 +96,7 @@ const Admin = () => {
           <button
             type="button"
             // className={styles.registration_button}
+            disabled={click}
             style={{ marginLeft: "20px" }}
             onClick={submit}
           >

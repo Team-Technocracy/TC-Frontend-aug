@@ -75,9 +75,15 @@ function VigyaanForm() {
     Leader_branch: "",
     YOG: "",
     Member2_name: "",
+    Member2_email: "",
+    Member2_yog: "",
     Member2_whatsapp: "",
+    Member2_branch: "",
     Member3_name: "",
+    Member3_email: "",
+    Member3_yog: "",
     Member3_whatsapp: "",
+    Member3_branch: "",
     Problem_code: "",
     file: null,
   });
@@ -105,7 +111,7 @@ function VigyaanForm() {
       const isNumberValid = isWhatsAppNumberValid(e.target.value);
       setIsWhatsAppValidMember2(isNumberValid);
     }
-  
+
     if (e.target.name === "Member3_whatsapp") {
       const isNumberValid = isWhatsAppNumberValid(e.target.value);
       setIsWhatsAppValidMember3(isNumberValid);
@@ -113,6 +119,7 @@ function VigyaanForm() {
   }
 
   async function submit() {
+    console.log(form)
     setIsSubmitting(true);
     showLoader();
 
@@ -120,23 +127,14 @@ function VigyaanForm() {
     const isMember2WhatsAppValid = isWhatsAppNumberValid(form.Member2_whatsapp);
     const isMember3WhatsAppValid = isWhatsAppNumberValid(form.Member3_whatsapp);
 
-    if (
-      form.Team_name !== "" &&
-      form.Leader_name !== "" &&
-      form.Leader_email !== "" &&
-      form.Leader_whatsapp !== "" &&
-      isLeaderWhatsAppValid &&
-      form.College !== "" &&
-      form.YOG !== "" &&
-      form.Leader_branch !== "" &&
-      form.Member2_name !== "" &&
-      form.Member2_whatsapp !== "" &&
-      isMember2WhatsAppValid &&
-      ((form.Member3_whatsapp === "" && form.Member3_name==="") ||
-      (isMember3WhatsAppValid && form.Member3_name!== "")) &&
-      form.Problem_code !== "" &&
-      form.file
-    ) {
+    let condition1 = form.Team_name !== "" && form.Leader_name !== "" && form.Leader_email !== "" && form.Leader_whatsapp !== "" && isLeaderWhatsAppValid && form.College !== "" && form.YOG !== "" && form.Leader_branch !== "" && form.Member2_name !== "" && form.Member2_email !== "" && form.Member2_yog !== "" && form.Member2_whatsapp !== "" && form.Member2_branch !== "" && isMember2WhatsAppValid && form.Problem_code !== "" && form.file
+
+    let condition2 = true
+    if (member3) condition2 = form.Member3_email !== "" && form.Member3_name !== "" && form.Member3_whatsapp !== "" && form.Member3_whatsapp !== "" && form.Member3_yog !== "" && isMember3WhatsAppValid && form.Member3_branch !== ""
+    console.log(condition1)
+    console.log(condition2)
+
+    if (condition1 && condition2) {
       try {
         const res1 = await axios.post(`${backend}/vigyaanReg`, form, {
           headers: {
@@ -144,14 +142,26 @@ function VigyaanForm() {
           },
         });
         if (res1.data.ok) {
-          const res2 = await axios.post(`${backend}/vigyaanAbstract`, form, {
-            headers: {
-              "Content-Type": "multipart/form-data",
-            },
-          });
-          toast.success(res2.data.message); 
-        } else {
-          toast.error(res1.data.message); 
+          try {
+            const res2 = await axios.post(`${backend}/vigyaanAbstract`, form, {
+              headers: {
+                "Content-Type": "multipart/form-data",
+              },
+            });
+            if (res2.data.ok) {
+              toast.success(res2.data.message)
+            }
+            else {
+              toast.error(res2.data.message)
+            }
+          }
+          catch (err2) {
+            console.log(err2);
+            toast.error(err2.reponse.data.message);
+          }
+        }
+        else {
+          toast.error(res1.data.message);
         }
       } catch (err) {
         console.log(err);
@@ -166,6 +176,18 @@ function VigyaanForm() {
 
   const [attri, setAttri] = useState(false);
   const [toggle, setToggle] = useState(false);
+  const [member3, setMember3] = useState(false)
+
+  function member3Click() {
+    if (member3) {
+      form.Member3_name = ""
+      form.Member3_email = ""
+      form.Member3_whatsapp = ""
+      form.Member3_branch = ""
+      form.Member3_yog = ""
+    }
+    setMember3(!member3)
+  }
 
   function changeState() {
     setToggle(!toggle);
@@ -204,6 +226,9 @@ function VigyaanForm() {
                   in embracing the realm of Vigyaan. The captivating Problem
                   Statements for Vigyaan will soon be unveiled, and we eagerly
                   invite you all to delve into them.
+                </p>
+                <p>
+                  <b>NOTE</b>: Teams can be inter-branch or inter-year
                 </p>
                 <p className={styles.event_materials}>
                   <b>Abstract Submission :</b>
@@ -262,147 +287,249 @@ function VigyaanForm() {
                         onKeyUp={(e) => handle(e)}
                       />
                     </Grid>
-                    <Grid item xs={12}>
-                      <TextField
-                        margin="normal"
-                        required
-                        fullWidth
-                        id="team_Leader_name"
-                        name="Leader_name"
-                        label="Team Leader's Name"
-                        variant="outlined"
-                        autoComplete="off"
-                        onKeyUp={(e) => handle(e)}
-                      />
+
+                    {/* First Column */}
+                    <Grid item xs={12} sm={4}>
+                      <span style={{ color: "white" }}>Leader Details</span>
+                      <Grid item xs={12}>
+                        <TextField
+                          margin="normal"
+                          required
+                          fullWidth
+                          id="team_Leader_name"
+                          name="Leader_name"
+                          label="Team Leader's Name"
+                          variant="outlined"
+                          autoComplete="off"
+                          onKeyUp={(e) => handle(e)}
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          margin="normal"
+                          required
+                          fullWidth
+                          id="email"
+                          label="Leader's Email Address"
+                          name="Leader_email"
+                          autoComplete="email"
+                          variant="outlined"
+                          onKeyUp={(e) => handle(e)}
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          margin="normal"
+                          required
+                          fullWidth
+                          id="whatsapp_no"
+                          name="Leader_whatsapp"
+                          label="Leader's WhatsApp No"
+                          variant="outlined"
+                          autoComplete="off"
+                          onKeyUp={(e) => handle(e)}
+                        />
+                        {form.Leader_whatsapp && !isWhatsAppValid && (
+                          <p style={{ color: "red" }}>WhatsApp number must be of 10 digits.</p>
+                        )}
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          margin="normal"
+                          required
+                          fullWidth
+                          id="college_name"
+                          name="College"
+                          label="College Name"
+                          variant="outlined"
+                          autoComplete="off"
+                          onKeyUp={(e) => handle(e)}
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          margin="normal"
+                          required
+                          fullWidth
+                          id="college_name"
+                          name="Leader_branch"
+                          label="Leader's Branch"
+                          variant="outlined"
+                          autoComplete="off"
+                          onKeyUp={(e) => handle(e)}
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          margin="normal"
+                          required
+                          fullWidth
+                          id="year"
+                          name="YOG"
+                          label="Year of graduation"
+                          variant="outlined"
+                          autoComplete="off"
+                          onKeyUp={(e) => handle(e)}
+                        />
+                      </Grid>
                     </Grid>
-                    <Grid item xs={12}>
-                      <TextField
-                        margin="normal"
-                        required
-                        fullWidth
-                        id="email"
-                        label="Leader's Email Address"
-                        name="Leader_email"
-                        autoComplete="email"
-                        variant="outlined"
-                        onKeyUp={(e) => handle(e)}
-                      />
+
+                    {/* Second Column */}
+                    <Grid item xs={12} sm={4}>
+                      <span style={{ color: "white" }}>Member 2 Details</span>
+                      <Grid item xs={12}>
+                        <TextField
+                          margin="normal"
+                          name="Member2_name"
+                          id="name2"
+                          label="Team Member 2 Name"
+                          type="text"
+                          required
+                          fullWidth
+                          variant="outlined"
+                          autoComplete="none"
+                          onKeyUp={(e) => handle(e)}
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          margin="normal"
+                          name="Member2_email"
+                          id="name2"
+                          label="Member 2 Email"
+                          type="text"
+                          required
+                          fullWidth
+                          variant="outlined"
+                          autoComplete="none"
+                          onKeyUp={(e) => handle(e)}
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          margin="normal"
+                          name="Member2_whatsapp"
+                          id="whatsapp3"
+                          label="Member 2 Whatsapp No."
+                          type="text"
+                          required
+                          fullWidth
+                          variant="outlined"
+                          autoComplete="none"
+                          onKeyUp={(e) => handle(e)}
+                        />
+                        {form.Member2_whatsapp && !isWhatsAppValidMember2 && (
+                          <p style={{ color: "red" }}>WhatsApp number must be of 10 digits.</p>
+                        )}
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          margin="normal"
+                          required
+                          fullWidth
+                          id="college_name"
+                          name="Member2_branch"
+                          label="Member 2 Branch"
+                          variant="outlined"
+                          autoComplete="off"
+                          onKeyUp={(e) => handle(e)}
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          margin="normal"
+                          name="Member2_yog"
+                          id="name2"
+                          label="Member 2 Year of graduation"
+                          type="text"
+                          required
+                          fullWidth
+                          variant="outlined"
+                          autoComplete="none"
+                          onKeyUp={(e) => handle(e)}
+                        />
+                      </Grid>
+                      <Button variant="outlined" component="span" onClick={member3Click}>
+                        {!member3 ? "Add 3rd Team Member" : "Remove 3rd Team Member"}
+                      </Button>
                     </Grid>
-                    <Grid item xs={12}>
-                      <TextField
-                        margin="normal"
-                        required
-                        fullWidth
-                        id="whatsapp_no"
-                        name="Leader_whatsapp"
-                        label="Leader's WhatsApp No"
-                        variant="outlined"
-                        autoComplete="off"
-                        onKeyUp={(e) => handle(e)}
-                      />
-                      {form.Leader_whatsapp && !isWhatsAppValid && (
-                        <p style={{ color: "red" }}>WhatsApp number must be of 10 digits.</p>
-                      )}
-                    </Grid>
-                    <Grid item xs={12}>
-                      <TextField
-                        margin="normal"
-                        required
-                        fullWidth
-                        id="college_name"
-                        name="College"
-                        label="College Name"
-                        variant="outlined"
-                        autoComplete="off"
-                        onKeyUp={(e) => handle(e)}
-                      />
-                    </Grid>
-                    <Grid item xs={12}>
-                      <TextField
-                        margin="normal"
-                        required
-                        fullWidth
-                        id="branch"
-                        name="Leader_branch"
-                        label="Leader's Branch"
-                        variant="outlined"
-                        autoComplete="off"
-                        onKeyUp={(e) => handle(e)}
-                      />
-                    </Grid>
-                    <Grid item xs={12}>
-                      <TextField
-                        margin="normal"
-                        required
-                        fullWidth
-                        id="year"
-                        name="YOG"
-                        label="Year of graduation"
-                        variant="outlined"
-                        autoComplete="off"
-                        onKeyUp={(e) => handle(e)}
-                      />
-                    </Grid>
-                    <Grid item xs={12}>
-                      <TextField
-                        margin="normal"
-                        name="Member2_name"
-                        id="name2"
-                        label="Team Member 2 Name"
-                        type="text"
-                        required
-                        fullWidth
-                        variant="outlined"
-                        autoComplete="none"
-                        onKeyUp={(e) => handle(e)}
-                      />
-                    </Grid>
-                    <Grid item xs={12}>
-                      <TextField
-                        margin="normal"
-                        name="Member2_whatsapp"
-                        id="whatsapp3"
-                        label="Team Member 2 Whatsapp No."
-                        type="text"
-                        required
-                        fullWidth
-                        variant="outlined"
-                        autoComplete="none"
-                        onKeyUp={(e) => handle(e)}
-                      />
-                      {form.Member2_whatsapp && !isWhatsAppValidMember2 && (
-                        <p style={{ color: "red" }}>WhatsApp number must be of 10 digits.</p>
-                      )}
-                    </Grid>
-                    <Grid item xs={12}>
-                      <TextField
-                        margin="normal"
-                        name="Member3_name"
-                        id="name3"
-                        label="Team Member 3 Name"
-                        type="text"
-                        fullWidth
-                        variant="outlined"
-                        autoComplete="none"
-                        onKeyUp={(e) => handle(e)}
-                      />
-                    </Grid>
-                    <Grid item xs={12}>
-                      <TextField
-                        margin="normal"
-                        name="Member3_whatsapp"
-                        id="whatsapp3"
-                        label="Team Member 3 Whatsapp No."
-                        type="text"
-                        fullWidth
-                        variant="outlined"
-                        autoComplete="none"
-                        onKeyUp={(e) => handle(e)}
-                      />
-                      {form.Member3_whatsapp && !isWhatsAppValidMember3 && (
-                        <p style={{ color: "red" }}>WhatsApp number must be of 10 digits.</p>
-                      )}
-                    </Grid>
+
+                    {/* 3rd Column */}
+                    {member3 ?
+                      <Grid item xs={12} sm={4}>
+                        <span style={{ color: "white" }}>Member 3 Details</span>
+                        <Grid item xs={12}>
+                          <TextField
+                            margin="normal"
+                            name="Member3_name"
+                            id="name3"
+                            label="Team Member 3 Name"
+                            type="text"
+                            fullWidth
+                            variant="outlined"
+                            autoComplete="none"
+                            onKeyUp={(e) => handle(e)}
+                          />
+                        </Grid>
+                        <Grid item xs={12}>
+                          <TextField
+                            margin="normal"
+                            name="Member3_email"
+                            id="name2"
+                            label="Member 3 Email"
+                            type="text"
+                            required
+                            fullWidth
+                            variant="outlined"
+                            autoComplete="none"
+                            onKeyUp={(e) => handle(e)}
+                          />
+                        </Grid>
+                        <Grid item xs={12}>
+                          <TextField
+                            margin="normal"
+                            name="Member3_whatsapp"
+                            id="whatsapp3"
+                            label="Member 3 Whatsapp No."
+                            type="text"
+                            fullWidth
+                            variant="outlined"
+                            autoComplete="none"
+                            onKeyUp={(e) => handle(e)}
+                          />
+                          {form.Member3_whatsapp && !isWhatsAppValidMember3 && (
+                            <p style={{ color: "red" }}>WhatsApp number must be of 10 digits.</p>
+                          )}
+                        </Grid>
+                        <Grid item xs={12}>
+                          <TextField
+                            margin="normal"
+                            required
+                            fullWidth
+                            id="college_name"
+                            name="Member3_branch"
+                            label="Member 3 Branch"
+                            variant="outlined"
+                            autoComplete="off"
+                            onKeyUp={(e) => handle(e)}
+                          />
+                        </Grid>
+                        <Grid item xs={12}>
+                          <TextField
+                            margin="normal"
+                            name="Member3_yog"
+                            id="name2"
+                            label="Member 3 Year of graduation"
+                            type="text"
+                            required
+                            fullWidth
+                            variant="outlined"
+                            autoComplete="none"
+                            onKeyUp={(e) => handle(e)}
+                          />
+                        </Grid>
+                      </Grid>
+                      : <></>}
                     <Grid item xs={12}>
                       <TextField
                         margin="normal"
@@ -432,7 +559,7 @@ function VigyaanForm() {
                         </Button>
                       </label>
                       {uploadedFileName && (
-                        <p style={{color:"white", paddingTop:"1rem"}}>Uploaded File: {uploadedFileName}</p>
+                        <p style={{ color: "white", paddingTop: "1rem" }}>Uploaded File: {uploadedFileName}</p>
                       )}
                     </Grid>
                   </Grid>

@@ -177,14 +177,19 @@ function VigyaanForm() {
   const [attri, setAttri] = useState(false);
   const [toggle, setToggle] = useState(false);
   const [member3, setMember3] = useState(false)
+  const [column, setColumn] = useState(6)
 
   function member3Click() {
     if (member3) {
+      setColumn(6)
       form.Member3_name = ""
       form.Member3_email = ""
       form.Member3_whatsapp = ""
       form.Member3_branch = ""
       form.Member3_yog = ""
+    }
+    else {
+      setColumn(4)
     }
     setMember3(!member3)
   }
@@ -289,7 +294,7 @@ function VigyaanForm() {
                     </Grid>
 
                     {/* First Column */}
-                    <Grid item xs={12} sm={4}>
+                    <Grid item xs={12} sm={column}>
                       <span style={{ color: "white" }}>Leader Details</span>
                       <Grid item xs={12}>
                         <TextField
@@ -375,7 +380,7 @@ function VigyaanForm() {
                     </Grid>
 
                     {/* Second Column */}
-                    <Grid item xs={12} sm={4}>
+                    <Grid item xs={12} sm={column}>
                       <span style={{ color: "white" }}>Member 2 Details</span>
                       <Grid item xs={12}>
                         <TextField
@@ -456,7 +461,7 @@ function VigyaanForm() {
 
                     {/* 3rd Column */}
                     {member3 ?
-                      <Grid item xs={12} sm={4}>
+                      <Grid item xs={12} sm={column}>
                         <span style={{ color: "white" }}>Member 3 Details</span>
                         <Grid item xs={12}>
                           <TextField

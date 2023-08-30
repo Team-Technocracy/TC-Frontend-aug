@@ -115,18 +115,26 @@ function VigyaanForm() {
   async function submit() {
     setIsSubmitting(true);
     showLoader();
+
+    const isLeaderWhatsAppValid = isWhatsAppNumberValid(form.Leader_whatsapp);
+    const isMember2WhatsAppValid = isWhatsAppNumberValid(form.Member2_whatsapp);
+    const isMember3WhatsAppValid = isWhatsAppNumberValid(form.Member3_whatsapp);
+
     if (
       form.Team_name !== "" &&
       form.Leader_name !== "" &&
       form.Leader_email !== "" &&
       form.Leader_whatsapp !== "" &&
+      isLeaderWhatsAppValid &&
       form.College !== "" &&
       form.YOG !== "" &&
       form.Leader_branch !== "" &&
       form.Member3_name !== "" &&
       form.Member2_name !== "" &&
       form.Member2_whatsapp !== "" &&
+      isMember2WhatsAppValid &&
       form.Member3_whatsapp !== "" &&
+      isMember3WhatsAppValid &&
       form.Problem_code !== "" &&
       form.file
     ) {
@@ -152,7 +160,7 @@ function VigyaanForm() {
       }
     } else {
       setIsSubmitting(false);
-      toast.warning("Fill the required details!!!");
+      toast.warning("Fill the required details correctly!!!");
     }
     setIsSubmitting(false);
   }

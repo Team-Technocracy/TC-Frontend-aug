@@ -107,10 +107,11 @@ function VigyaanForm() {
       form.College !== "" &&
       form.YOG !== "" &&
       form.Leader_branch !== "" &&
-      form.Member3_name !== "" &&
       form.Member2_name !== "" &&
       form.Member2_whatsapp !== "" &&
-      form.Member3_whatsapp !== "" &&
+      isMember2WhatsAppValid &&
+      ((form.Member3_whatsapp === "" && form.Member3_name==="") ||
+      (isMember3WhatsAppValid && form.Member3_name!== "")) &&
       form.Problem_code !== "" &&
       form.file
     ) {

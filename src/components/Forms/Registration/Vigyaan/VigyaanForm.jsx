@@ -398,7 +398,7 @@ function VigyaanForm() {
                         </Button>
                       </label>
                       {uploadedFileName && (
-                        <p>Uploaded File: {uploadedFileName}</p>
+                        <p style={{color:"white", paddingTop:"1rem"}}>Uploaded File: {uploadedFileName}</p>
                       )}
                     </Grid>
                   </Grid>

@@ -129,12 +129,11 @@ function VigyaanForm() {
       form.College !== "" &&
       form.YOG !== "" &&
       form.Leader_branch !== "" &&
-      form.Member3_name !== "" &&
       form.Member2_name !== "" &&
       form.Member2_whatsapp !== "" &&
       isMember2WhatsAppValid &&
-      form.Member3_whatsapp !== "" &&
-      isMember3WhatsAppValid &&
+      ((form.Member3_whatsapp === "" && form.Member3_name==="") ||
+      (isMember3WhatsAppValid && form.Member3_name!== "")) &&
       form.Problem_code !== "" &&
       form.file
     ) {
@@ -382,7 +381,6 @@ function VigyaanForm() {
                         id="name3"
                         label="Team Member 3 Name"
                         type="text"
-                        required
                         fullWidth
                         variant="outlined"
                         autoComplete="none"
@@ -396,7 +394,6 @@ function VigyaanForm() {
                         id="whatsapp3"
                         label="Team Member 3 Whatsapp No."
                         type="text"
-                        required
                         fullWidth
                         variant="outlined"
                         autoComplete="none"

@@ -48,16 +48,8 @@ function VigyaanForm() {
   const [selectedSubcategory, setSelectedSubcategory] = useState("");
 
   const [uploadedFileName, setUploadedFileName] = useState("");
-
-  function handleFileChange(file) {
-    // Handle the selected file here
-    console.log("Selected file:", file);
-    if (file) {
-      setUploadedFileName(file.name);
-    } else {
-      setUploadedFileName("");
-    }
-  }
+  const [uploadedFile, setUploadedFile] = useState(null);
+  const [formData, setFormData] = useState(new FormData());
 
   const { id } = useParams();
   // data of event
@@ -76,12 +68,26 @@ function VigyaanForm() {
     Leader_name: "",
     Leader_email: "",
     Leader_whatsapp: "",
-    Leader_college: "",
+    College: "",
     Leader_branch: "",
-    YOS: "",
-    Member2: "",
-    Member3: "",
+    YOG: "",
+    Member2_name: "",
+    Member2_whatsapp: "",
+    Member3_name: "",
+    Member3_whatsapp: "",
+    Problem_code: "",
+    file: null
   });
+
+  const handleFileChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const newData = { ...form }
+      newData['file'] = file
+      set(newData)
+      setUploadedFileName(file.name)
+    }
+  };
 
   function handle(e) {
     const newData = { ...form };
@@ -96,20 +102,33 @@ function VigyaanForm() {
       form.Leader_name !== "" &&
       form.Leader_email !== "" &&
       form.Leader_whatsapp !== "" &&
-      form.Leader_college !== "" &&
-      form.YOS !== "" &&
+      form.College !== "" &&
+      form.YOG !== "" &&
       form.Leader_branch !== "" &&
-      form.Member3 !== "" &&
-      form.Member2 !== ""
+      form.Member3_name !== "" &&
+      form.Member2_name !== "" &&
+      form.Member2_whatsapp !== "" &&
+      form.Member3_whatsapp !== "" &&
+      form.Problem_code !== "" &&
+      form.file
     ) {
       try {
-        const response = await axios.post(`${backend}/vigyanReg`, form, {
+        const res1 = await axios.post(`${backend}/vigyaanReg`, form, {
           headers: {
             "Content-Type": "application/json",
           },
-        });
-        const res = response.data;
-        alert(res.message);
+        })
+        if (res1.data.ok) {
+          const res2 = await axios.post(`${backend}/vigyaanAbstract`, form, {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
+          })
+          alert(res2.data.message)
+        }
+        else {
+          alert(res1.data.message)
+        }
       } catch (err) {
         console.log(err);
         alert("An error occurred");
@@ -264,8 +283,8 @@ function VigyaanForm() {
                         required
                         fullWidth
                         id="college_name"
-                        name="Leader_college"
-                        label="Leader's College Name"
+                        name="College"
+                        label="College Name"
                         variant="outlined"
                         autoComplete="off"
                         onKeyUp={(e) => handle(e)}
@@ -278,7 +297,7 @@ function VigyaanForm() {
                         fullWidth
                         id="branch"
                         name="Leader_branch"
-                        label="Branch"
+                        label="Leader's Branch"
                         variant="outlined"
                         autoComplete="off"
                         onKeyUp={(e) => handle(e)}
@@ -290,8 +309,8 @@ function VigyaanForm() {
                         required
                         fullWidth
                         id="year"
-                        name="YOS"
-                        label="Year"
+                        name="YOG"
+                        label="Year of graduation"
                         variant="outlined"
                         autoComplete="off"
                         onKeyUp={(e) => handle(e)}
@@ -300,9 +319,9 @@ function VigyaanForm() {
                     <Grid item xs={12}>
                       <TextField
                         margin="normal"
-                        name="Member2"
+                        name="Member2_name"
                         id="name2"
-                        label="Team Member Name 2"
+                        label="Team Member 2 Name"
                         type="text"
                         required
                         fullWidth
@@ -314,9 +333,9 @@ function VigyaanForm() {
                     <Grid item xs={12}>
                       <TextField
                         margin="normal"
-                        name="Member3"
-                        id="name3"
-                        label="Team Member Name 3"
+                        name="Member2_whatsapp"
+                        id="whatsapp3"
+                        label="Team Member 2 Whatsapp No."
                         type="text"
                         required
                         fullWidth
@@ -326,65 +345,59 @@ function VigyaanForm() {
                       />
                     </Grid>
                     <Grid item xs={12}>
-                      <FormControl fullWidth variant="outlined">
-                        <InputLabel id="category-label">Category</InputLabel>
-                        <Select
-                          labelId="category-label"
-                          id="category"
-                          name="category"
-                          label="Category"
-                          value={selectedCategory}
-                          onChange={(e) => {
-                            setSelectedCategory(e.target.value);
-                            setSelectedSubcategory(""); // Reset subcategory when changing category
-                          }}
-                        >
-                          {categories.map((category) => (
-                            <MenuItem key={category} value={category}>
-                              {category}
-                            </MenuItem>
-                          ))}
-                        </Select>
-                      </FormControl>
+                      <TextField
+                        margin="normal"
+                        name="Member3_name"
+                        id="name3"
+                        label="Team Member 3 Name"
+                        type="text"
+                        required
+                        fullWidth
+                        variant="outlined"
+                        autoComplete="none"
+                        onKeyUp={(e) => handle(e)}
+                      />
                     </Grid>
-                    {selectedCategory && (
-                      <Grid item xs={12}>
-                        <FormControl fullWidth variant="outlined">
-                          <InputLabel id="subcategory-label">
-                            Subcategory
-                          </InputLabel>
-                          <Select
-                            labelId="subcategory-label"
-                            id="subcategory"
-                            name="subcategory"
-                            label="Subcategory"
-                            value={selectedSubcategory}
-                            onChange={(e) =>
-                              setSelectedSubcategory(e.target.value)
-                            }
-                          >
-                            {subcategories[selectedCategory].map(
-                              (subcategory) => (
-                                <MenuItem key={subcategory} value={subcategory}>
-                                  {subcategory}
-                                </MenuItem>
-                              )
-                            )}
-                          </Select>
-                        </FormControl>
-                      </Grid>
-                    )}
+                    <Grid item xs={12}>
+                      <TextField
+                        margin="normal"
+                        name="Member3_whatsapp"
+                        id="whatsapp3"
+                        label="Team Member 3 Whatsapp No."
+                        type="text"
+                        required
+                        fullWidth
+                        variant="outlined"
+                        autoComplete="none"
+                        onKeyUp={(e) => handle(e)}
+                      />
+                    </Grid>
+                    <Grid item xs={12}>
+                      <TextField
+                        margin="normal"
+                        type="text"
+                        required
+                        fullWidth
+                        variant="outlined"
+                        autoComplete="none"
+                        labelId="category-label"
+                        id="category"
+                        name="Problem_code"
+                        label="Problem Code"
+                        onKeyUp={(e) => handle(e)}
+                      />
+                    </Grid>
                     <Grid item xs={12}>
                       <input
-                        accept="image/*"
+                        accept="application/pdf"
                         style={{ display: "none" }}
                         id="file-input"
                         type="file"
-                        onChange={(e) => handleFileChange(e.target.files[0])}
+                        onChange={handleFileChange}
                       />
                       <label htmlFor="file-input">
                         <Button variant="outlined" component="span">
-                          Upload File
+                          Upload Your Abstract
                         </Button>
                       </label>
                       {uploadedFileName && (

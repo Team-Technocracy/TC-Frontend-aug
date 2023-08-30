@@ -66,7 +66,7 @@ const ProblemSt = () => {
                 </Link>
               </a>
             </div>
-            <div className={classnames(styles.pscol, styles.pshcol)}>
+            {/* <div className={classnames(styles.pscol, styles.pshcol)}>
               <a
               // href="https://docs.google.com/forms/d/e/1FAIpQLSfCUbeaZcqwaZRpBKhjzCFN6X4PCHqmoAjwW60uUI5ukpj7oA/viewform"
               // target="_blank"
@@ -76,7 +76,7 @@ const ProblemSt = () => {
                   ABSTRACT SUBMISSION
                 </button>
               </a>
-            </div>
+            </div> */}
             <div className={classnames(styles.pscol, styles.pshcol)}>
               <a href={registerform} target="_blank" rel="noreferrer">
                 <button className={classnames(styles.button49, styles.btnh)}>

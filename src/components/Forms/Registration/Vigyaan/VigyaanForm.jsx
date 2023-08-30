@@ -6,7 +6,6 @@ import styles from "../Styles/styles.module.css";
 import Navbar from "../../../Home/Navbar-new/Navbar";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
 import { Button } from "@mui/material";
-
 import {
   Container,
   TextField,
@@ -14,13 +13,14 @@ import {
   useThemeProps,
   Alert,
 } from "@mui/material";
-import { Select, MenuItem, FormControl, InputLabel } from "@mui/material";
+// import { Select, MenuItem, FormControl, InputLabel } from "@mui/material";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { NavLink } from "react-router-dom";
 import img from "../../../../assets/images/leftArrow.png";
 import useFullPageLoader from "../../../utils/useFullPageLoader";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 const darkTheme = createTheme({
   palette: {
     mode: "dark",
@@ -29,14 +29,14 @@ const darkTheme = createTheme({
 
 const backend = urls.backend;
 
-const categories = ["A", "B", "C", "D", "E"];
-const subcategories = {
-  A: ["A1", "A2", "A3"],
-  B: ["B1", "B2", "B3"],
-  C: ["C1", "C2", "C3"],
-  D: ["D1", "D2", "D3"],
-  E: ["E1", "E2", "E3"],
-};
+// const categories = ["A", "B", "C", "D", "E"];
+// const subcategories = {
+//   A: ["A1", "A2", "A3"],
+//   B: ["B1", "B2", "B3"],
+//   C: ["C1", "C2", "C3"],
+//   D: ["D1", "D2", "D3"],
+//   E: ["E1", "E2", "E3"],
+// };
 
 function VigyaanForm() {
   const [loader, showLoader, hideLoader] = useFullPageLoader();
@@ -44,8 +44,9 @@ function VigyaanForm() {
   const [alert1, setAlert] = useState(false);
   const [alertContent0, setErrorAlertContent] = useState("");
   const [alertContent1, setSuccessAlertContent] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState("");
-  const [selectedSubcategory, setSelectedSubcategory] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  // const [selectedCategory, setSelectedCategory] = useState("");
+  // const [selectedSubcategory, setSelectedSubcategory] = useState("");
 
   const [uploadedFileName, setUploadedFileName] = useState("");
   const [uploadedFile, setUploadedFile] = useState(null);
@@ -76,16 +77,16 @@ function VigyaanForm() {
     Member3_name: "",
     Member3_whatsapp: "",
     Problem_code: "",
-    file: null
+    file: null,
   });
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
-      const newData = { ...form }
-      newData['file'] = file
-      set(newData)
-      setUploadedFileName(file.name)
+      const newData = { ...form };
+      newData["file"] = file;
+      set(newData);
+      setUploadedFileName(file.name);
     }
   };
 
@@ -96,6 +97,7 @@ function VigyaanForm() {
   }
 
   async function submit() {
+    setIsSubmitting(true);
     showLoader();
     if (
       form.Team_name !== "" &&
@@ -117,28 +119,26 @@ function VigyaanForm() {
           headers: {
             "Content-Type": "application/json",
           },
-        })
+        });
         if (res1.data.ok) {
           const res2 = await axios.post(`${backend}/vigyaanAbstract`, form, {
             headers: {
-              'Content-Type': 'multipart/form-data'
-            }
-          })
-          alert(res2.data.message)
-        }
-        else {
-          alert(res1.data.message)
+              "Content-Type": "multipart/form-data",
+            },
+          });
+          toast.success(res2.data.message); 
+        } else {
+          toast.error(res1.data.message); 
         }
       } catch (err) {
         console.log(err);
-        alert("An error occurred");
+        toast.error("An error occurred");
       }
     } else {
-      hideLoader();
-      setErrorAlertContent("Fill the required details!!!");
-      setErrorAlert(true);
-      setAlert(false);
+      setIsSubmitting(false);
+      toast.warning("Fill the required details!!!");
     }
+    setIsSubmitting(false);
   }
 
   const [attri, setAttri] = useState(false);
@@ -194,9 +194,6 @@ function VigyaanForm() {
                     <li> 23rd October, 2023</li>
                   </ul>
                 </p>
-                {/* <p className={styles.event_location}><b>LOCATION : </b>Left Garden</p>
-							<p className={styles.event_time}><b>TIME : </b>9:30 AM- 11:30 AM</p>
-							<p className={styles.event_time}><b>DATE : </b>04.02.2023</p> */}
                 <p className={styles.event_time}>
                   <b>CONTACT : </b>Somya Kabra : 6266307431, Sachin Saini :
                   9352152742
@@ -401,7 +398,7 @@ function VigyaanForm() {
                         </Button>
                       </label>
                       {uploadedFileName && (
-                        <p>Uploaded File: {uploadedFileName}</p>
+                        <p style={{color:"white", paddingTop:"1rem"}}>Uploaded File: {uploadedFileName}</p>
                       )}
                     </Grid>
                   </Grid>
@@ -426,13 +423,15 @@ function VigyaanForm() {
                     type="button"
                     className={styles.registration_button}
                     onClick={submit}
+                    disabled={isSubmitting} // Disable the button during submission
                   >
-                    Register
+                    {isSubmitting ? "Submitting" : "Register"}
                   </button>
                 </form>
               </Formik>
             </div>
           </Container>
+          <ToastContainer position="top-right" autoClose={5000} />
         </div>
       </ThemeProvider>
     </>

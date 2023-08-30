@@ -1,26 +1,19 @@
-import React from "react";
-import urls from "../../../../urls.json";
+import React, { useState } from "react";
 import { Formik } from "formik";
-import { useState } from "react";
+import { Button, Container, Grid, TextField, Alert } from "@mui/material";
+import useFullPageLoader from "../../../utils/useFullPageLoader";
+import axios from "axios";
+import { toast } from "react-toastify";
+// ... (other imports)
+
+import urls from "../../../../urls.json";
 import styles from "../Styles/styles.module.css";
 import Navbar from "../../../Home/Navbar-new/Navbar";
 import { ThemeProvider, createTheme } from "@mui/material/styles";
-import { Button } from "@mui/material";
 
-import {
-  Container,
-  TextField,
-  Grid,
-  useThemeProps,
-  Alert,
-} from "@mui/material";
-import { Select, MenuItem, FormControl, InputLabel } from "@mui/material";
 import { useParams } from "react-router-dom";
-import axios from "axios";
 import { NavLink } from "react-router-dom";
 import img from "../../../../assets/images/leftArrow.png";
-import useFullPageLoader from "../../../utils/useFullPageLoader";
-import { toast } from "react-toastify";
 const darkTheme = createTheme({
   palette: {
     mode: "dark",
@@ -29,14 +22,14 @@ const darkTheme = createTheme({
 
 const backend = urls.backend;
 
-const categories = ["A", "B", "C", "D", "E"];
-const subcategories = {
-  A: ["A1", "A2", "A3"],
-  B: ["B1", "B2", "B3"],
-  C: ["C1", "C2", "C3"],
-  D: ["D1", "D2", "D3"],
-  E: ["E1", "E2", "E3"],
-};
+// const categories = ["A", "B", "C", "D", "E"];
+// const subcategories = {
+//   A: ["A1", "A2", "A3"],
+//   B: ["B1", "B2", "B3"],
+//   C: ["C1", "C2", "C3"],
+//   D: ["D1", "D2", "D3"],
+//   E: ["E1", "E2", "E3"],
+// };
 
 function VigyaanForm() {
   const [loader, showLoader, hideLoader] = useFullPageLoader();
@@ -76,16 +69,16 @@ function VigyaanForm() {
     Member3_name: "",
     Member3_whatsapp: "",
     Problem_code: "",
-    file: null
+    file: null,
   });
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
     if (file) {
-      const newData = { ...form }
-      newData['file'] = file
-      set(newData)
-      setUploadedFileName(file.name)
+      const newData = { ...form };
+      newData["file"] = file;
+      set(newData);
+      setUploadedFileName(file.name);
     }
   };
 
@@ -95,49 +88,34 @@ function VigyaanForm() {
     set(newData);
   }
 
-  async function submit() {
+  async function submit(values, { setSubmitting, resetForm }) {
     showLoader();
-    if (
-      form.Team_name !== "" &&
-      form.Leader_name !== "" &&
-      form.Leader_email !== "" &&
-      form.Leader_whatsapp !== "" &&
-      form.College !== "" &&
-      form.YOG !== "" &&
-      form.Leader_branch !== "" &&
-      form.Member3_name !== "" &&
-      form.Member2_name !== "" &&
-      form.Member2_whatsapp !== "" &&
-      form.Member3_whatsapp !== "" &&
-      form.Problem_code !== "" &&
-      form.file
-    ) {
-      try {
-        const res1 = await axios.post(`${backend}/vigyaanReg`, form, {
+    setErrorAlert(false);
+    setAlert(false);
+
+    try {
+      const res1 = await axios.post(`${backend}/vigyaanReg`, values, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (res1.data.ok) {
+        const res2 = await axios.post(`${backend}/vigyaanAbstract`, values, {
           headers: {
-            "Content-Type": "application/json",
+            "Content-Type": "multipart/form-data",
           },
-        })
-        if (res1.data.ok) {
-          const res2 = await axios.post(`${backend}/vigyaanAbstract`, form, {
-            headers: {
-              'Content-Type': 'multipart/form-data'
-            }
-          })
-          alert(res2.data.message)
-        }
-        else {
-          alert(res1.data.message)
-        }
-      } catch (err) {
-        console.log(err);
-        alert("An error occurred");
+        });
+        toast.success("Successfully Submitted");
+        resetForm(); // Reset form values
+      } else {
+        toast.error(res1.data.message);
       }
-    } else {
+    } catch (err) {
+      console.log(err);
+      toast.error("An error occurred");
+    } finally {
       hideLoader();
-      setErrorAlertContent("Fill the required details!!!");
-      setErrorAlert(true);
-      setAlert(false);
+      setSubmitting(false);
     }
   }
 
@@ -222,7 +200,7 @@ function VigyaanForm() {
                   number_3: "",
                 }}
               >
-                <form className={styles.form}>
+                {/* <form className={styles.form}>
                   <Grid container spacing={2}>
                     <Grid item xs={12}>
                       <TextField
@@ -429,7 +407,219 @@ function VigyaanForm() {
                   >
                     Register
                   </button>
-                </form>
+                </form> */}
+                {({
+                  values,
+                  errors,
+                  touched,
+                  handleChange,
+                  handleBlur,
+                  handleSubmit,
+                  isSubmitting,
+                }) => (
+                  <form className={styles.form} onSubmit={handleSubmit}>
+                    <Grid container spacing={2}>
+                      <Grid item xs={12}>
+                        <TextField
+                          margin="normal"
+                          required
+                          fullWidth
+                          id="Team_name"
+                          name="Team_name"
+                          label="Team Name"
+                          variant="outlined"
+                          autoFocus
+                          autoComplete="off"
+                          onKeyUp={(e) => handle(e)}
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          margin="normal"
+                          required
+                          fullWidth
+                          id="team_Leader_name"
+                          name="Leader_name"
+                          label="Team Leader's Name"
+                          variant="outlined"
+                          autoComplete="off"
+                          onKeyUp={(e) => handle(e)}
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          margin="normal"
+                          required
+                          fullWidth
+                          id="email"
+                          label="Leader's Email Address"
+                          name="Leader_email"
+                          autoComplete="email"
+                          variant="outlined"
+                          onKeyUp={(e) => handle(e)}
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          margin="normal"
+                          required
+                          fullWidth
+                          id="whatsapp_no"
+                          name="Leader_whatsapp"
+                          label="Leader's WhatsApp No"
+                          variant="outlined"
+                          autoComplete="off"
+                          onKeyUp={(e) => handle(e)}
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          margin="normal"
+                          required
+                          fullWidth
+                          id="college_name"
+                          name="College"
+                          label="College Name"
+                          variant="outlined"
+                          autoComplete="off"
+                          onKeyUp={(e) => handle(e)}
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          margin="normal"
+                          required
+                          fullWidth
+                          id="branch"
+                          name="Leader_branch"
+                          label="Leader's Branch"
+                          variant="outlined"
+                          autoComplete="off"
+                          onKeyUp={(e) => handle(e)}
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          margin="normal"
+                          required
+                          fullWidth
+                          id="year"
+                          name="YOG"
+                          label="Year of graduation"
+                          variant="outlined"
+                          autoComplete="off"
+                          onKeyUp={(e) => handle(e)}
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          margin="normal"
+                          name="Member2_name"
+                          id="name2"
+                          label="Team Member 2 Name"
+                          type="text"
+                          required
+                          fullWidth
+                          variant="outlined"
+                          autoComplete="none"
+                          onKeyUp={(e) => handle(e)}
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          margin="normal"
+                          name="Member2_whatsapp"
+                          id="whatsapp3"
+                          label="Team Member 2 Whatsapp No."
+                          type="text"
+                          required
+                          fullWidth
+                          variant="outlined"
+                          autoComplete="none"
+                          onKeyUp={(e) => handle(e)}
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          margin="normal"
+                          name="Member3_name"
+                          id="name3"
+                          label="Team Member 3 Name"
+                          type="text"
+                          required
+                          fullWidth
+                          variant="outlined"
+                          autoComplete="none"
+                          onKeyUp={(e) => handle(e)}
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          margin="normal"
+                          name="Member3_whatsapp"
+                          id="whatsapp3"
+                          label="Team Member 3 Whatsapp No."
+                          type="text"
+                          required
+                          fullWidth
+                          variant="outlined"
+                          autoComplete="none"
+                          onKeyUp={(e) => handle(e)}
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <TextField
+                          margin="normal"
+                          type="text"
+                          required
+                          fullWidth
+                          variant="outlined"
+                          autoComplete="none"
+                          labelId="category-label"
+                          id="category"
+                          name="Problem_code"
+                          label="Problem Code"
+                          onKeyUp={(e) => handle(e)}
+                        />
+                      </Grid>
+                      <Grid item xs={12}>
+                        <input
+                          accept="application/pdf"
+                          style={{ display: "none" }}
+                          id="file-input"
+                          type="file"
+                          onChange={handleFileChange}
+                        />
+                        <label htmlFor="file-input">
+                          <Button variant="outlined" component="span">
+                            Upload Your Abstract
+                          </Button>
+                        </label>
+                        {uploadedFileName && (
+                          <p>Uploaded File: {uploadedFileName}</p>
+                        )}
+                      </Grid>
+                    </Grid>
+                    <br></br>
+                    {alert0 && (
+                      <Alert variant="outlined" severity="error">
+                        {alertContent0}
+                      </Alert>
+                    )}
+                    {alert1 && (
+                      <Alert variant="outlined" severity="success">
+                        {alertContent1}
+                      </Alert>
+                    )}
+                    <button
+                      type="submit"
+                      className={styles.registration_button}
+                      disabled={isSubmitting}
+                    >
+                      {isSubmitting ? "Submitting..." : "Register"}
+                    </button>
+                  </form>
+                )}
               </Formik>
             </div>
           </Container>

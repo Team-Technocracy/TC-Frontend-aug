@@ -8,7 +8,8 @@ import HomePage from "./components/MainPage";
 import Aavartan from "./components/AavartanNew";
 // import TechTeam from './components/Team/TechTeam/techteamsec';
 import React, { useEffect, useState } from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+// import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { BrowserRouter, Routes, Route, useLocation } from "react-router-dom";
 import { Helmet } from "react-helmet";
 import ScrollToTop from "react-scroll-to-top";
 import ScrollUp from "./components/ScrollUp";
@@ -40,6 +41,7 @@ import QR_FINDER from "./components/QR_FINDER";
 import ValoForm from "./components/Forms/Registration/ValoForm"
 import Gform from "./components/Forms/Registration/Gform";
 import Vigyaan from "./components/Aavartan_Components/Vigyaan";
+import Admin from "./components/Aavartan_Components/Admin";
 import VigyaanForm from "./components/Forms/Registration/Vigyaan/VigyaanForm";
 
 const App = () => {
@@ -75,6 +77,7 @@ const App = () => {
           {/* <Routes> */}
           <Route exact path="/aavartan" element={<Aavartan />} />
           <Route exact path="/vigyaan" element={<Vigyaan />} />
+          <Route exact path="/admin" element={<Admin />} />
           <Route exact path="/events" element={<EventPage />} />
           <Route exact path="/tech-team" element={<TechTeamSec />} />
           <Route exact path="/register/blindcoding" element={<BlindCode />} />
@@ -100,8 +103,8 @@ const App = () => {
           <Route exact path="/register/robotrek" element={<Robotrek />} />
           <Route exact path="/register/openmic" element={<OpenMic />} />
           <Route exact path="/register/speedcubing" element={<SpeedCubing />} />
-          <Route path='/register/valotournament' element={<ValoForm />}/>
-          <Route path='/register/TechnomicQuotient' element={<Gform />}/>
+          <Route path='/register/valotournament' element={<ValoForm />} />
+          <Route path='/register/TechnomicQuotient' element={<Gform />} />
           < Route
             exact
             path="/register/ClickOVartan"
@@ -123,6 +126,7 @@ const App = () => {
         </Helmet>
 
         <Footer />
+
         <Acko />
         <ScrollToTop
           smooth

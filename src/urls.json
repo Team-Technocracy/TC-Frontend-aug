@@ -1,3 +1,3 @@
 {
-  "backend": "https://technocracy.nitrr.ac.in/server"
+  "backend": "http://localhost:5000/server"
 }

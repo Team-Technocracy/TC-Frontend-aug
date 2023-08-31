@@ -75,10 +75,10 @@ function VigyaanForm() {
     Leader_branch: "",
     YOG: "",
     Member2_name: "",
-    Member2_email: "",
-    Member2_yog: "",
     Member2_whatsapp: "",
+    Member2_email: "",
     Member2_branch: "",
+    Member2_yog: "",
     Member3_name: "",
     Member3_email: "",
     Member3_yog: "",
@@ -136,38 +136,19 @@ function VigyaanForm() {
 
     if (condition1 && condition2) {
       try {
-        const res1 = await axios.post(`${backend}/vigyaanReg`, form, {
+        const res = await axios.post(`${backend}/vigyaanReg`, form, {
           headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        if (res1.data.ok) {
-          try {
-            const res2 = await axios.post(`${backend}/vigyaanAbstract`, form, {
-              headers: {
-                "Content-Type": "multipart/form-data",
-              },
-            });
-            if (res2.data.ok) {
-              toast.success(res2.data.message)
-            }
-            else {
-              toast.error(res2.data.message)
-            }
+            "Content-Type": "multipart/form-data",
           }
-          catch (err2) {
-            console.log(err2);
-            toast.error(err2.reponse.data.message);
-          }
-        }
-        else {
-          toast.error(res1.data.message);
-        }
-      } catch (err) {
-        console.log(err);
-        toast.error(err.reponse.data.message);
+        })
+        alert(res.data.message)
       }
-    } else {
+      catch (err) {
+        console.error(err)
+        alert(err.reponse.data.message)
+      }
+    }
+    else {
       setIsSubmitting(false);
       toast.warning("Fill the required details correctly!!!");
     }

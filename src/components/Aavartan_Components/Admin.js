@@ -41,7 +41,7 @@ const Admin = () => {
       }
       else {
         try {
-          const response = await axios.post(`${backend}/changeFile`, form, {
+          const response = await axios.post(`${backend}/changeVigyaanFile`, form, {
             headers: {
               'Content-Type': 'multipart/form-data'
             }

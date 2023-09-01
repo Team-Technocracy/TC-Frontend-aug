@@ -33,7 +33,6 @@ const Admin = () => {
 
   async function submit() {
     setClick(true)
-    console.log(form.file.size / (1024 * 1024))
     if (form.branch !== "" && form.password !== "" && form.file) {
       const size = form.file.size / (1024 * 1024)
       if (size > 1) {

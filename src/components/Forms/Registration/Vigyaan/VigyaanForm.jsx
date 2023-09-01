@@ -135,17 +135,24 @@ function VigyaanForm() {
     console.log(condition2)
 
     if (condition1 && condition2) {
-      try {
-        const res = await axios.post(`${backend}/vigyaanReg`, form, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          }
-        })
-        alert(res.data.message)
+      const size = form.file.size / (1024 * 1024)
+      if (size > 1) {
+        setIsSubmitting(false);
+        toast.warning("Minimum file size: 1 MB");
       }
-      catch (err) {
-        console.error(err)
-        alert(err.reponse.data.message)
+      else {
+        try {
+          const res = await axios.post(`${backend}/vigyaanReg`, form, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            }
+          })
+          alert(res.data.message)
+        }
+        catch (err) {
+          console.error(err)
+          alert(err.reponse.data.message)
+        }
       }
     }
     else {

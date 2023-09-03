@@ -322,6 +322,7 @@ function VigyaanForm() {
                           autoComplete="off"
                           onKeyUp={(e) => handle(e)}
                         />
+                        <span style={{color : "gray" , fontSize  : "0.8rem"}}>Don't include +91 or 0.</span>
                         {form.Leader_whatsapp && !isWhatsAppValid && (
                           <p style={{ color: "red" }}>WhatsApp number must be of 10 digits.</p>
                         )}
@@ -411,6 +412,7 @@ function VigyaanForm() {
                           autoComplete="none"
                           onKeyUp={(e) => handle(e)}
                         />
+                        <span style={{color : "gray" , fontSize  : "0.8rem"}}>Don't include +91 or 0.</span>
                         {form.Member2_whatsapp && !isWhatsAppValidMember2 && (
                           <p style={{ color: "red" }}>WhatsApp number must be of 10 digits.</p>
                         )}
@@ -490,6 +492,7 @@ function VigyaanForm() {
                             autoComplete="none"
                             onKeyUp={(e) => handle(e)}
                           />
+                           <span style={{color : "gray" , fontSize  : "0.8rem"}}>Don't include +91 or 0.</span>
                           {form.Member3_whatsapp && !isWhatsAppValidMember3 && (
                             <p style={{ color: "red" }}>WhatsApp number must be of 10 digits.</p>
                           )}

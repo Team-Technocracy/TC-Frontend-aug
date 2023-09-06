@@ -217,7 +217,7 @@ function VigyaanForm() {
                   🧠 Get ready to seize this opportunity as we embark on a
                   journey to unravel the mysteries of the future. Come, join us
                   in embracing the realm of Vigyaan. The captivating Problem
-                  Statements for Vigyaan will soon be unveiled, and we eagerly
+                  Statements for Vigyaan are unveiled, and we eagerly
                   invite you all to delve into them.
                 </p>
                 <p>

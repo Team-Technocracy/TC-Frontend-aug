@@ -151,7 +151,7 @@ function VigyaanForm() {
         }
         catch (err) {
           console.error(err)
-          alert(err.reponse.data.message)
+          alert(err.response.data.message)
         }
       }
     }

@@ -16,24 +16,25 @@ jobs:
     steps:
     - uses: actions/checkout@v1
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: 18  # You can change this to the Node.js version you need
+    # - name: Set up Node.js
+    #   uses: actions/setup-node@v2
+    #   with:
+    #     node-version: 18
 
-    - name: Install dependencies
-      run: npm install --force # Use the appropriate package manager and command for your project
+    # - name: Install dependencies
+    #   run: npm install --force
 
-    - name: Build
-      run: npm run build  # Replace with the command to build your project
-
+    # - name: Build
+    #   run: npm run build
+      
     - name: Generate PEM and Copy build folder contents to ~/frontend-old
-      run:  echo "$PEM_SECRET" >> techno.pem && cat techno.pem && scp -i "techno.pem" -r build/* ec2-user@ec2-3-111-170-203.ap-south-1.compute.amazonaws.com:~/frontend
-      env:
-        PEM_SECRET: ${{ secrets.PEM }}
+      run: echo ${{vars.PEM}}
+      # run:  echo "$PEM_SECRET" >> techno.pem && cat techno.pem && scp -i "techno.pem" -r build/* ec2-user@ec2-3-111-170-203.ap-south-1.compute.amazonaws.com:~/frontend
+      # env:
+      #   PEM_SECRET: ${{ secrets.PEM }}
 
-    - name: Connect to the SSH Server
-      run: ssh -i techno.pem ec2-user@ec2-3-111-170-203.ap-south-1.compute.amazonaws.com
+    # - name: Connect to the SSH Server
+    #   run: ssh -i techno.pem ec2-user@ec2-3-111-170-203.ap-south-1.compute.amazonaws.com
 
-    - name: Executing remote command
-      run: sudo cp -r ~/frontend/ /home/testing
+    # - name: Executing remote command
+    #   run: sudo cp -r ~/frontend/ /home/testing

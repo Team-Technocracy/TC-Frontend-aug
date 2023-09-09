@@ -22,7 +22,7 @@ jobs:
         node-version: 18  # You can change this to the Node.js version you need
 
     - name: Install dependencies
-      run: npm install  # Use the appropriate package manager and command for your project
+      run: npm install --force # Use the appropriate package manager and command for your project
 
     - name: Build
       run: npm run build  # Replace with the command to build your project

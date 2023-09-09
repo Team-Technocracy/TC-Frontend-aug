@@ -39,3 +39,4 @@ jobs:
       run: ssh -i techno.pem ec2-user@ec2-3-111-170-203.ap-south-1.compute.amazonaws.com "sudo rm -r /home/tc_frontend && sudo cp -r frontend/ /home/tc_frontend && sudo systemctl restart nginx"
 
     - name: LIVE!!!
+      run: echo "Site is live🚀🚀🚀"

@@ -30,7 +30,7 @@ jobs:
     - name: Generate PEM and Copy build folder contents to ~/frontend-old
       run: |
         echo "$PEM_SECRET" >> techno.pem << EOF
-        scp -i techno.pem -r build/* ec2-user@ec2-3-111-170-203.ap-south-1.compute.amazonaws.com:~/frontend
+        scp -i "techno.pem" -r build/* ec2-user@ec2-3-111-170-203.ap-south-1.compute.amazonaws.com:~/frontend
         EOF
       env:
         PEM_SECRET: ${{ secrets.PEM }}

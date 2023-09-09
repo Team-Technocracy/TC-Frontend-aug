@@ -229,7 +229,7 @@ function VigyaanForm() {
               <div>
                 <h3 className={styles.event_title}>Vigyaan</h3>
                 <p className={styles.event_description}>
-                  Greetings once again to the highly anticipated Science
+                  Greeetings once again to the highly anticipated Science
                   exhibition - VIGYAAN, the flagship event of AAVARTAN'23-24! 🚀
                   Team Technocracy is thrilled to extend a hearty invitation to
                   all the brilliant intellects spanning diverse dimensions. We

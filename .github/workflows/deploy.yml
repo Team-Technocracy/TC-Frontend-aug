@@ -1,0 +1,42 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - master
+
+env:
+  CI: false
+
+jobs:
+  build:
+  
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: 18
+
+    - name: Install dependencies
+      run: npm install --force
+
+    - name: Build
+      run: npm run build
+      
+    - name: Generate PEM
+      run: echo "$PEM" >> techno.pem && chmod 400 techno.pem
+      env:
+        PEM: ${{vars.PEM}}
+
+    - name: Copy build folder contents to AWS
+      run: scp -o StrictHostKeyChecking=no -i techno.pem -r build/* ec2-user@ec2-3-111-170-203.ap-south-1.compute.amazonaws.com:~/frontend
+
+    - name: Doing the magic now
+      run: ssh -i techno.pem ec2-user@ec2-3-111-170-203.ap-south-1.compute.amazonaws.com "sudo rm -r /home/tc_frontend && sudo cp -r frontend/ /home/tc_frontend && sudo systemctl restart nginx"
+
+    - name: LIVE!!!
+      run: echo "Site is live🚀🚀🚀"

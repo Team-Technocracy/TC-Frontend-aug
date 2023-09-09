@@ -33,7 +33,8 @@ jobs:
         PEM: ${{vars.PEM}}
 
     - name: Copy build folder contents to ~/frontend-old
-      run: scp -i techno.pem -r build/* ec2-user@ec2-3-111-170-203.ap-south-1.compute.amazonaws.com:~/frontend
+      # run: scp -i techno.pem -r build/* ec2-user@ec2-3-111-170-203.ap-south-1.compute.amazonaws.com:~/frontend
+      run: scp -o StrictHostKeyChecking=no -i techno.pem -r build/* ec2-user@ec2-3-111-170-203.ap-south-1.compute.amazonaws.com:~/frontend
 
     # - name: Connect to the SSH Server
     #   run: ssh -i techno.pem ec2-user@ec2-3-111-170-203.ap-south-1.compute.amazonaws.com

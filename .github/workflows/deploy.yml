@@ -16,27 +16,24 @@ jobs:
     steps:
     - uses: actions/checkout@v1
 
-    # - name: Set up Node.js
-    #   uses: actions/setup-node@v2
-    #   with:
-    #     node-version: 18
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: 18
 
-    # - name: Install dependencies
-    #   run: npm install --force
+    - name: Install dependencies
+      run: npm install --force
 
-    # - name: Build
-    #   run: npm run build
+    - name: Build
+      run: npm run build
       
-    - name: Generate PEM and Copy build folder contents to ~/frontend-old
+    - name: Generate PEM
       run: echo "$PEM" >> techno.pem
       env:
         PEM: ${{vars.PEM}}
 
-    - name: LS
-      run: cat techno.pem
-      # run:  echo "$PEM_SECRET" >> techno.pem && cat techno.pem && scp -i "techno.pem" -r build/* ec2-user@ec2-3-111-170-203.ap-south-1.compute.amazonaws.com:~/frontend
-      # env:
-      #   PEM_SECRET: ${{ secrets.PEM }}
+    - name: Copy build folder contents to ~/frontend-old
+      run: scp -i techno.pem -r build/* ec2-user@ec2-3-111-170-203.ap-south-1.compute.amazonaws.com:~/frontend
 
     # - name: Connect to the SSH Server
     #   run: ssh -i techno.pem ec2-user@ec2-3-111-170-203.ap-south-1.compute.amazonaws.com

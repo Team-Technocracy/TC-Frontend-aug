@@ -28,7 +28,9 @@ jobs:
     #   run: npm run build
       
     - name: Generate PEM and Copy build folder contents to ~/frontend-old
-      run: echo ${{vars.PEM}} >> techno.pem
+      run: echo "$PEM" >> techno.pem
+      env:
+        PEM: ${{vars.PEM}}
 
     - name: LS
       run: ls

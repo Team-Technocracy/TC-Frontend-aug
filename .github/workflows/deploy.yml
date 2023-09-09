@@ -1,0 +1,48 @@
+name: Deploy
+
+on:
+  push:
+    branches:
+      - master
+
+env:
+  CI: false
+
+jobs:
+  build:
+  
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v1
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v2
+      with:
+        node-version: 18  # You can change this to the Node.js version you need
+
+    - name: Install dependencies
+      run: npm install  # Use the appropriate package manager and command for your project
+
+    - name: Build
+      run: npm run build  # Replace with the command to build your project
+
+    - name: Copy repository contents via scp
+      uses: appleboy/scp-action@master
+      env:
+        HOST: ${{ secrets.HOST }}
+        USERNAME: ${{ secrets.USERNAME }}
+        PORT: ${{ secrets.PORT }}
+        KEY: ${{ secrets.SSHKEY }}
+      with:
+        source: "build/"
+        target: "/test"
+
+    - name: Executing remote command
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        USERNAME: ${{ secrets.USERNAME }}
+        PORT: ${{ secrets.PORT }}
+        KEY: ${{ secrets.SSHKEY }}
+        script: ls

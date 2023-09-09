@@ -32,11 +32,10 @@ jobs:
       env:
         PEM: ${{vars.PEM}}
 
-    - name: Copy build folder contents to ~/frontend
+    - name: Copy build folder contents to AWS
       run: scp -o StrictHostKeyChecking=no -i techno.pem -r build/* ec2-user@ec2-3-111-170-203.ap-south-1.compute.amazonaws.com:~/frontend
 
     - name: Doing the magic now
       run: ssh -i techno.pem ec2-user@ec2-3-111-170-203.ap-south-1.compute.amazonaws.com "sudo rm -r /home/tc_frontend && sudo cp -r frontend/ /home/tc_frontend && sudo systemctl restart nginx"
 
     - name: LIVE!!!
-      run: echo LIVE!!!

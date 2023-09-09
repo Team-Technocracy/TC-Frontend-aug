@@ -28,7 +28,7 @@ jobs:
       run: npm run build
       
     - name: Generate PEM
-      run: echo "$PEM" >> techno.pem
+      run: echo "$PEM" >> techno.pem && chmod 400 techno.pem
       env:
         PEM: ${{vars.PEM}}
 

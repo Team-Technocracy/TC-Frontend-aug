@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import urls from "../../../../urls.json";
 import { Formik } from "formik";
 import styles from "../Styles/styles.module.css";
@@ -54,6 +54,11 @@ function VigyaanForm() {
   const [uploadedFile, setUploadedFile] = useState(null);
   const [formData, setFormData] = useState(new FormData());
 
+  const [attri, setAttri] = useState(false);
+  const [toggle, setToggle] = useState(false);
+  const [member3, setMember3] = useState(false)
+  const [column, setColumn] = useState(6)
+
   const { id } = useParams();
   // data of event
 
@@ -66,7 +71,7 @@ function VigyaanForm() {
   // 	}
   // });
 
-  const [form, set] = useState({
+  const cachedForm = JSON.parse(localStorage.getItem('vigyaanForm')) || {
     Team_name: "",
     Leader_name: "",
     Leader_email: "",
@@ -75,18 +80,38 @@ function VigyaanForm() {
     Leader_branch: "",
     YOG: "",
     Member2_name: "",
-    Member2_whatsapp: "",
     Member2_email: "",
-    Member2_branch: "",
     Member2_yog: "",
+    Member2_whatsapp: "",
+    Member2_branch: "",
     Member3_name: "",
     Member3_email: "",
     Member3_yog: "",
     Member3_whatsapp: "",
     Member3_branch: "",
-    Problem_code: "",
-    file: null,
-  });
+    Problem_code: ""
+  };
+
+  const [form, set] = useState(cachedForm);
+
+  useEffect(() => {
+    setIsWhatsAppValid(isWhatsAppNumberValid(cachedForm.Leader_whatsapp))
+    setIsWhatsAppValidMember2(isWhatsAppNumberValid(cachedForm.Member2_whatsapp))
+    setIsWhatsAppValidMember3(isWhatsAppNumberValid(cachedForm.Member3_whatsapp))
+    const isMember3 = JSON.parse(localStorage.getItem('member3')) || false
+    if (isMember3) {
+      setColumn(4)
+      setMember3(isMember3)
+    }
+    else {
+      form.Member3_name = ""
+      form.Member3_email = ""
+      form.Member3_whatsapp = ""
+      form.Member3_branch = ""
+      form.Member3_yog = ""
+      setColumn(6)
+    }
+  }, [])
 
   const handleFileChange = (event) => {
     const file = event.target.files[0];
@@ -99,9 +124,11 @@ function VigyaanForm() {
   };
 
   function handle(e) {
+    console.log(e.target.value)
     const newData = { ...form };
     newData[e.target.name] = e.target.value;
     set(newData);
+    localStorage.setItem('vigyaanForm', JSON.stringify(newData));
 
     if (e.target.name === "Leader_whatsapp") {
       const isNumberValid = isWhatsAppNumberValid(e.target.value);
@@ -162,11 +189,6 @@ function VigyaanForm() {
     setIsSubmitting(false);
   }
 
-  const [attri, setAttri] = useState(false);
-  const [toggle, setToggle] = useState(false);
-  const [member3, setMember3] = useState(false)
-  const [column, setColumn] = useState(6)
-
   function member3Click() {
     if (member3) {
       setColumn(6)
@@ -180,6 +202,7 @@ function VigyaanForm() {
       setColumn(4)
     }
     setMember3(!member3)
+    localStorage.setItem('member3', !member3);
   }
 
   function changeState() {
@@ -277,7 +300,8 @@ function VigyaanForm() {
                         variant="outlined"
                         autoFocus
                         autoComplete="off"
-                        onKeyUp={(e) => handle(e)}
+                        onChange={(e) => handle(e)}
+                        value={form.Team_name}
                       />
                     </Grid>
 
@@ -294,7 +318,8 @@ function VigyaanForm() {
                           label="Team Leader's Name"
                           variant="outlined"
                           autoComplete="off"
-                          onKeyUp={(e) => handle(e)}
+                          onChange={(e) => handle(e)}
+                          value={form.Leader_name}
                         />
                       </Grid>
                       <Grid item xs={12}>
@@ -307,7 +332,8 @@ function VigyaanForm() {
                           name="Leader_email"
                           autoComplete="email"
                           variant="outlined"
-                          onKeyUp={(e) => handle(e)}
+                          onChange={(e) => handle(e)}
+                          value={form.Leader_email}
                         />
                       </Grid>
                       <Grid item xs={12}>
@@ -320,7 +346,8 @@ function VigyaanForm() {
                           label="Leader's WhatsApp No"
                           variant="outlined"
                           autoComplete="off"
-                          onKeyUp={(e) => handle(e)}
+                          onChange={(e) => handle(e)}
+                          value={form.Leader_whatsapp}
                         />
                         {form.Leader_whatsapp && !isWhatsAppValid && (
                           <p style={{ color: "red" }}>WhatsApp number must be of 10 digits.</p>
@@ -336,7 +363,8 @@ function VigyaanForm() {
                           label="College Name"
                           variant="outlined"
                           autoComplete="off"
-                          onKeyUp={(e) => handle(e)}
+                          onChange={(e) => handle(e)}
+                          value={form.College}
                         />
                       </Grid>
                       <Grid item xs={12}>
@@ -349,7 +377,8 @@ function VigyaanForm() {
                           label="Leader's Branch"
                           variant="outlined"
                           autoComplete="off"
-                          onKeyUp={(e) => handle(e)}
+                          onChange={(e) => handle(e)}
+                          value={form.Leader_branch}
                         />
                       </Grid>
                       <Grid item xs={12}>
@@ -362,7 +391,8 @@ function VigyaanForm() {
                           label="Year of graduation"
                           variant="outlined"
                           autoComplete="off"
-                          onKeyUp={(e) => handle(e)}
+                          onChange={(e) => handle(e)}
+                          value={form.YOG}
                         />
                       </Grid>
                     </Grid>
@@ -381,7 +411,8 @@ function VigyaanForm() {
                           fullWidth
                           variant="outlined"
                           autoComplete="none"
-                          onKeyUp={(e) => handle(e)}
+                          onChange={(e) => handle(e)}
+                          value={form.Member2_name}
                         />
                       </Grid>
                       <Grid item xs={12}>
@@ -395,7 +426,8 @@ function VigyaanForm() {
                           fullWidth
                           variant="outlined"
                           autoComplete="none"
-                          onKeyUp={(e) => handle(e)}
+                          onChange={(e) => handle(e)}
+                          value={form.Member2_email}
                         />
                       </Grid>
                       <Grid item xs={12}>
@@ -409,7 +441,8 @@ function VigyaanForm() {
                           fullWidth
                           variant="outlined"
                           autoComplete="none"
-                          onKeyUp={(e) => handle(e)}
+                          onChange={(e) => handle(e)}
+                          value={form.Member2_whatsapp}
                         />
                         {form.Member2_whatsapp && !isWhatsAppValidMember2 && (
                           <p style={{ color: "red" }}>WhatsApp number must be of 10 digits.</p>
@@ -425,7 +458,8 @@ function VigyaanForm() {
                           label="Member 2 Branch"
                           variant="outlined"
                           autoComplete="off"
-                          onKeyUp={(e) => handle(e)}
+                          onChange={(e) => handle(e)}
+                          value={form.Member2_branch}
                         />
                       </Grid>
                       <Grid item xs={12}>
@@ -439,7 +473,8 @@ function VigyaanForm() {
                           fullWidth
                           variant="outlined"
                           autoComplete="none"
-                          onKeyUp={(e) => handle(e)}
+                          onChange={(e) => handle(e)}
+                          value={form.Member2_yog}
                         />
                       </Grid>
                       <Button variant="outlined" component="span" onClick={member3Click}>
@@ -461,7 +496,8 @@ function VigyaanForm() {
                             fullWidth
                             variant="outlined"
                             autoComplete="none"
-                            onKeyUp={(e) => handle(e)}
+                            onChange={(e) => handle(e)}
+                            value={form.Member3_name}
                           />
                         </Grid>
                         <Grid item xs={12}>
@@ -475,7 +511,8 @@ function VigyaanForm() {
                             fullWidth
                             variant="outlined"
                             autoComplete="none"
-                            onKeyUp={(e) => handle(e)}
+                            onChange={(e) => handle(e)}
+                            value={form.Member3_email}
                           />
                         </Grid>
                         <Grid item xs={12}>
@@ -488,7 +525,8 @@ function VigyaanForm() {
                             fullWidth
                             variant="outlined"
                             autoComplete="none"
-                            onKeyUp={(e) => handle(e)}
+                            onChange={(e) => handle(e)}
+                            value={form.Member3_whatsapp}
                           />
                           {form.Member3_whatsapp && !isWhatsAppValidMember3 && (
                             <p style={{ color: "red" }}>WhatsApp number must be of 10 digits.</p>
@@ -504,7 +542,8 @@ function VigyaanForm() {
                             label="Member 3 Branch"
                             variant="outlined"
                             autoComplete="off"
-                            onKeyUp={(e) => handle(e)}
+                            onChange={(e) => handle(e)}
+                            value={form.Member3_branch}
                           />
                         </Grid>
                         <Grid item xs={12}>
@@ -518,7 +557,8 @@ function VigyaanForm() {
                             fullWidth
                             variant="outlined"
                             autoComplete="none"
-                            onKeyUp={(e) => handle(e)}
+                            onChange={(e) => handle(e)}
+                            value={form.Member3_yog}
                           />
                         </Grid>
                       </Grid>
@@ -535,7 +575,8 @@ function VigyaanForm() {
                         id="category"
                         name="Problem_code"
                         label="Problem Code"
-                        onKeyUp={(e) => handle(e)}
+                        onChange={(e) => handle(e)}
+                        value={form.Problem_code}
                       />
                     </Grid>
                     <Grid item xs={12}>

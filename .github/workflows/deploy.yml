@@ -27,8 +27,10 @@ jobs:
     - name: Build
       run: npm run build  # Replace with the command to build your project
 
-    - name: generate pem file
-      run: echo ${{ secrets.PEM }} >> techno.pem
+    - name: Generate PEM File
+      run: echo "$PEM_SECRET" > techno.pem
+      env:
+        PEM_SECRET: ${{ secrets.PEM }}
 
     - name: Copy build folder contents to ~/frontend-old
       run: scp -i techno.pem -r build/* ec2-user@ec2-3-111-170-203.ap-south-1.compute.amazonaws.com:~/frontend
